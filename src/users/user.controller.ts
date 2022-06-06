@@ -1,6 +1,7 @@
 import { BaseController } from "../common/base.controller";
 import {LoggerService} from "../logger/logger.service";
 import { Request, Response, NextFunction }  from "express";
+import {HttpError} from "../errors/http-error";
 
 export class UserController extends BaseController {
 
@@ -9,7 +10,7 @@ export class UserController extends BaseController {
         this.bindRoutes([
             {
                 path : '/login',
-                method : 'post',
+                method : 'get',
                 func : this.login,
             },
             {
@@ -21,7 +22,8 @@ export class UserController extends BaseController {
     }
 
     login ( req: Request, res : Response, next : NextFunction )  {
-        this.ok<string>(res, 'login')
+        // this.ok<string>(res, 'login')
+        next( new HttpError(401, 'no autarization'))
     }
 
     register ( req: Request, res : Response, next : NextFunction )  {
