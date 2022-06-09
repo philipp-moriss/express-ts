@@ -1,11 +1,11 @@
 import { BaseController } from "../common/base.controller";
-import {LoggerService} from "../logger/logger.service";
 import { Request, Response, NextFunction }  from "express";
 import {HttpError} from "../errors/http-error";
+import {ILogger} from "../logger/logger.interface";
 
 export class UserController extends BaseController {
 
-    constructor( logger : LoggerService) {
+    constructor( logger : ILogger) {
         super(logger);
         this.bindRoutes([
             {
@@ -23,7 +23,7 @@ export class UserController extends BaseController {
 
     login ( req: Request, res : Response, next : NextFunction )  {
         // this.ok<string>(res, 'login')
-        next( new HttpError(401, 'no autarization'))
+        next( new HttpError(401, 'no autarization', 'login'))
     }
 
     register ( req: Request, res : Response, next : NextFunction )  {
