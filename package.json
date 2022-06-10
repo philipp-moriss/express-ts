@@ -8,7 +8,9 @@
     "start": "node dist/main.js",
     "build": "tsc",
     "dev": "npm run build && npm run start",
-    "watch": "npm run build && nodemon dist/main.js"
+    "watch": "npm run build && nodemon dist/main.js",
+    "lint" : "eslint ./src/**",
+    "lint:fix": "eslint ./src/** --fix"
   },
   "repository": {
     "type": "git",
