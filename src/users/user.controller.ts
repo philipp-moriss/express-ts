@@ -27,6 +27,7 @@ export class UserController extends BaseController implements IUserController {
 
 	login(req: Request, res: Response, next: NextFunction): void {
 		// this.ok<string>(res, 'login')
+		console.log('node')
 		next(new HttpError(401, 'no autarization', 'login'));
 	}
 
