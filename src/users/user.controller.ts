@@ -6,6 +6,8 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../types';
 import 'reflect-metadata';
 import { IUserController } from './user.interface';
+import { UserLoginDto } from '../dto/user-login.dto';
+import { UserRegisterDto } from '../dto/user-register.dto';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
@@ -14,7 +16,7 @@ export class UserController extends BaseController implements IUserController {
 		this.bindRoutes([
 			{
 				path: '/login',
-				method: 'get',
+				method: 'post',
 				func: this.login,
 			},
 			{
@@ -25,13 +27,13 @@ export class UserController extends BaseController implements IUserController {
 		]);
 	}
 
-	login(req: Request, res: Response, next: NextFunction): void {
-		// this.ok<string>(res, 'login')
-		console.log('node')
-		next(new HttpError(401, 'no autarization', 'login'));
+	login(req: Request<{}, {}, UserLoginDto>, res: Response, next: NextFunction): void {
+		console.log(req.body);
+		this.ok<string>(res, 'login');
+		//next(new HttpError(401, 'no autarization', 'login'));
 	}
 
-	register(req: Request, res: Response, next: NextFunction): void {
+	register(req: Request<{}, {}, UserRegisterDto>, res: Response, next: NextFunction): void {
 		this.ok<string>(res, 'register');
 	}
 }
