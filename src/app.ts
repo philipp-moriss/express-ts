@@ -7,6 +7,7 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from './types';
 import { json } from 'body-parser';
 import 'reflect-metadata';
+import { IUserController } from './users/user.interface';
 
 @injectable()
 export class App {
@@ -16,7 +17,7 @@ export class App {
 
 	constructor(
 		@inject(TYPES.ILogger) private logger: ILogger,
-		@inject(TYPES.UserController) private userController: UserController,
+		@inject(TYPES.UserController) private userController: IUserController,
 		@inject(TYPES.ExceptionFilter) private exceptionFilter: ExceptionFilter,
 	) {
 		this.app = express();
