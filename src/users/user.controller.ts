@@ -10,6 +10,7 @@ import { UserRegisterDto } from './dto/user-register.dto';
 import 'reflect-metadata';
 import { IUsersService } from './users.service.interface';
 import { HttpError } from '../errors/http-error';
+import { ValidateMiddleware } from '../common/validate.middleware';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
@@ -28,14 +29,7 @@ export class UserController extends BaseController implements IUserController {
 				path: '/register',
 				method: 'post',
 				func: this.register,
-				middlewares: [
-					{
-						execute(req, resp, next) {
-							console.log('call funck');
-							next();
-						},
-					},
-				],
+				middlewares: [new ValidateMiddleware(UserRegisterDto)],
 			},
 		]);
 	}
