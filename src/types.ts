@@ -1,5 +1,3 @@
-import { ConfigService } from './config/config.service';
-
 export const TYPES = {
 	Application: Symbol.for('Application'),
 	ILogger: Symbol.for('ILogger'),
@@ -7,4 +5,5 @@ export const TYPES = {
 	UsersService: Symbol.for('UsersService'),
 	ExceptionFilter: Symbol.for('ExceptionFilter'),
 	ConfigService: Symbol.for('ConfigService'),
+	PrismaService: Symbol.for('PrismaService'),
 };
