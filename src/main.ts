@@ -1,19 +1,23 @@
 import { App } from './app';
 import { LoggerService } from './logger/logger.service';
-import { UserController } from './users/user.controller';
+
 import { ExceptionFilter } from './errors/exception.filter';
 import { Container, ContainerModule, interfaces } from 'inversify';
 import { ILogger } from './logger/logger.interface';
 import { TYPES } from './types';
 import { IExceptionFilter } from './errors/exception.filter.interface';
-import { IUsersService } from './users/users.service.interface';
-import { UsersService } from './users/users.service';
-import { IUserController } from './users/user.interface';
+
 import 'reflect-metadata';
 import { IConfigService } from './config/config.service.interface';
 import { ConfigService } from './config/config.service';
 import { IPrismaService } from './database/prisma.service.interface';
 import { PrismaService } from './database/prisma.service';
+import { IUserController } from './users/controller/user.interface';
+import { IUsersService } from './users/service/users.service.interface';
+import { UsersService } from './users/service/users.service';
+import { UserController } from './users/controller/user.controller';
+import { IUsersRepository } from './users/repository/users.repository.interface';
+import { UsersRepository } from './users/repository/users.repository';
 
 export interface IBootstrapReturn {
 	appContainer: Container;
@@ -27,6 +31,7 @@ export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<IUsersService>(TYPES.UsersService).to(UsersService).inSingletonScope();
 	bind<IConfigService>(TYPES.ConfigService).to(ConfigService).inSingletonScope();
 	bind<IPrismaService>(TYPES.PrismaService).to(PrismaService).inSingletonScope();
+	bind<IUsersRepository>(TYPES.UsersRepository).to(UsersRepository).inSingletonScope();
 	bind<App>(TYPES.Application).to(App);
 });
 

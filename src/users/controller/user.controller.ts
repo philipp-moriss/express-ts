@@ -1,16 +1,16 @@
-import { BaseController } from '../common/base.controller';
-import { Request, Response, NextFunction } from 'express';
-import { ILogger } from '../logger/logger.interface';
-import { inject, injectable } from 'inversify';
-import { TYPES } from '../types';
 import { IUserController } from './user.interface';
-import { User } from './user.entity';
-import { UserLoginDto } from './dto/user-login.dto';
-import { UserRegisterDto } from './dto/user-register.dto';
+import { BaseController } from '../../common/base.controller';
+import { TYPES } from '../../types';
+import { ILogger } from '../../logger/logger.interface';
+import { IUsersService } from '../service/users.service.interface';
+import { ValidateMiddleware } from '../../common/validate.middleware';
+import { UserLoginDto } from '../dto/user-login.dto';
+import { HttpError } from '../../errors/http-error';
+import { UserRegisterDto } from '../dto/user-register.dto';
+import { Request, Response, NextFunction } from 'express';
+import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
-import { IUsersService } from './users.service.interface';
-import { HttpError } from '../errors/http-error';
-import { ValidateMiddleware } from '../common/validate.middleware';
+import { UserModal } from '@prisma/client';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
@@ -47,11 +47,12 @@ export class UserController extends BaseController implements IUserController {
 	): Promise<void> {
 		const result = await this.userService.createUser(body);
 		if (!result) {
-			return next(new HttpError(422, 'user exists'));
+			return next(new HttpError(422, 'user exists', 'UserController'));
 		}
-		this.ok<Omit<User, 'password' | 'setPassword'>>(res, {
+		this.ok<Omit<UserModal, 'password'>>(res, {
 			email: result.email,
 			name: result.name,
+			id: result.id,
 		});
 	}
 }

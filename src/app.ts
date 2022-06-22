@@ -4,11 +4,12 @@ import { ILogger } from './logger/logger.interface';
 import { inject, injectable } from 'inversify';
 import { TYPES } from './types';
 import { json } from 'body-parser';
-import { IUserController } from './users/user.interface';
+
 import { IConfigService } from './config/config.service.interface';
 import { IExceptionFilter } from './errors/exception.filter.interface';
 import { IPrismaService } from './database/prisma.service.interface';
 import 'reflect-metadata';
+import { IUserController } from './users/controller/user.interface';
 
 @injectable()
 export class App {
