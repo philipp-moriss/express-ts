@@ -5,5 +5,5 @@ import { UserModal } from '@prisma/client';
 export interface IUsersService {
 	createUser: (dto: UserRegisterDto) => Promise<UserModal | null>;
 
-	validateUser: (dto: UserLoginDto) => boolean;
+	validateUser: (dto: UserLoginDto) => Promise<boolean>;
 }

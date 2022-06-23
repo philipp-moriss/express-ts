@@ -24,6 +24,7 @@ export class UserController extends BaseController implements IUserController {
 				path: '/login',
 				method: 'post',
 				func: this.login,
+				middlewares: [new ValidateMiddleware(UserLoginDto)],
 			},
 			{
 				path: '/register',
@@ -34,10 +35,16 @@ export class UserController extends BaseController implements IUserController {
 		]);
 	}
 
-	login(req: Request<{}, {}, UserLoginDto>, res: Response, next: NextFunction): void {
-		console.log(req.body);
+	async login(
+		{ body }: Request<{}, {}, UserLoginDto>,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> {
+		const result = await this.userService.validateUser(body);
+		if (!result) {
+			return next(new HttpError(401, 'no autarization', 'UserController-login'));
+		}
 		this.ok<string>(res, 'login');
-		//next(new HttpError(401, 'no autarization', 'login'));
 	}
 
 	async register(
@@ -47,7 +54,7 @@ export class UserController extends BaseController implements IUserController {
 	): Promise<void> {
 		const result = await this.userService.createUser(body);
 		if (!result) {
-			return next(new HttpError(422, 'user exists', 'UserController'));
+			return next(new HttpError(422, 'user exists', 'UserController-register'));
 		}
 		this.ok<Omit<UserModal, 'password'>>(res, {
 			email: result.email,
