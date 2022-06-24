@@ -11,12 +11,15 @@ import { Request, Response, NextFunction } from 'express';
 import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
 import { UserModal } from '@prisma/client';
+import { sign } from 'jsonwebtoken';
+import { IConfigService } from '../../config/config.service.interface';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
 	constructor(
 		@inject(TYPES.ILogger) private loggerService: ILogger,
 		@inject(TYPES.UsersService) private userService: IUsersService,
+		@inject(TYPES.ConfigService) private configService: IConfigService,
 	) {
 		super(loggerService);
 		this.bindRoutes([
@@ -44,7 +47,9 @@ export class UserController extends BaseController implements IUserController {
 		if (!result) {
 			return next(new HttpError(401, 'no autarization', 'UserController-login'));
 		}
-		this.ok<string>(res, 'login');
+		const secret = this.configService.get('SECRET_JWT_TOKEN');
+		const jwt = await this.signJWT(body.email, secret);
+		this.ok<{ jwt: string }>(res, { jwt });
 	}
 
 	async register(
@@ -60,6 +65,26 @@ export class UserController extends BaseController implements IUserController {
 			email: result.email,
 			name: result.name,
 			id: result.id,
+		});
+	}
+
+	private signJWT(email: string, secret: string): Promise<string> {
+		return new Promise<string>((resolve, reject) => {
+			sign(
+				{
+					email,
+					iat: Math.floor(Date.now() / 1000),
+				},
+				secret,
+				{ algorithm: 'HS256' },
+				(err, encoded) => {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(encoded as string);
+					}
+				},
+			);
 		});
 	}
 }
