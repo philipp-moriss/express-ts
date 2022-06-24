@@ -68,7 +68,7 @@ export class UserController extends BaseController implements IUserController {
 		});
 	}
 
-	private signJWT(email: string, secret: string): Promise<string> {
+	signJWT(email: string, secret: string): Promise<string> {
 		return new Promise<string>((resolve, reject) => {
 			sign(
 				{
