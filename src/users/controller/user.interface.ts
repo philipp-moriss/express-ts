@@ -6,5 +6,5 @@ export interface IUserController extends BaseController {
 
 	register: (req: Request, res: Response, next: NextFunction) => void;
 
-	signJWT: (email: string, secret: string) => Promise<string>;
+	info: (req: Request, res: Response, next: NextFunction) => void;
 }

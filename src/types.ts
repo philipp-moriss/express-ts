@@ -8,3 +8,13 @@ export const TYPES = {
 	PrismaService: Symbol.for('PrismaService'),
 	UsersRepository: Symbol.for('UsersRepository'),
 };
+
+export const ENV_TYPE: EnvType = {
+	SALT: 'SALT',
+	SECRET_JWT_TOKEN: 'SECRET_JWT_TOKEN',
+} as const;
+
+type EnvType = {
+	SALT: 'SALT';
+	SECRET_JWT_TOKEN: 'SECRET_JWT_TOKEN';
+};

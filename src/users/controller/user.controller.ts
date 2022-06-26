@@ -1,13 +1,13 @@
 import { IUserController } from './user.interface';
 import { BaseController } from '../../common/base.controller';
-import { TYPES } from '../../types';
+import { ENV_TYPE, TYPES } from '../../types';
 import { ILogger } from '../../logger/logger.interface';
 import { IUsersService } from '../service/users.service.interface';
 import { ValidateMiddleware } from '../../common/validate.middleware';
 import { UserLoginDto } from '../dto/user-login.dto';
 import { HttpError } from '../../errors/http-error';
 import { UserRegisterDto } from '../dto/user-register.dto';
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
 import { UserModal } from '@prisma/client';
@@ -35,6 +35,12 @@ export class UserController extends BaseController implements IUserController {
 				func: this.register,
 				middlewares: [new ValidateMiddleware(UserRegisterDto)],
 			},
+			{
+				path: '/info',
+				method: 'get',
+				func: this.info,
+				middlewares: [],
+			},
 		]);
 	}
 
@@ -47,7 +53,7 @@ export class UserController extends BaseController implements IUserController {
 		if (!result) {
 			return next(new HttpError(401, 'no autarization', 'UserController-login'));
 		}
-		const secret = this.configService.get('SECRET_JWT_TOKEN');
+		const secret = this.configService.get(ENV_TYPE.SECRET_JWT_TOKEN);
 		const jwt = await this.signJWT(body.email, secret);
 		this.ok<{ jwt: string }>(res, { jwt });
 	}
@@ -68,7 +74,15 @@ export class UserController extends BaseController implements IUserController {
 		});
 	}
 
-	signJWT(email: string, secret: string): Promise<string> {
+	async info(
+		{ user }: Request<{}, {}, UserRegisterDto>,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> {
+		this.ok(res, { email: user });
+	}
+
+	private signJWT(email: string, secret: string): Promise<string> {
 		return new Promise<string>((resolve, reject) => {
 			sign(
 				{
