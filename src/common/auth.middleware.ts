@@ -12,13 +12,15 @@ export class AuthMiddleware implements IMiddleware {
 				if (err) {
 					next();
 				} else if (payload) {
+					console.log(payload)
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					//@ts-ignore
 					req.user = payload.email;
 					next();
 				}
 			});
+		} else {
+			next();
 		}
-		next();
 	}
 }

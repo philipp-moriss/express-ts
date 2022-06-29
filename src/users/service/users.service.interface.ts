@@ -6,4 +6,6 @@ export interface IUsersService {
 	createUser: (dto: UserRegisterDto) => Promise<UserModal | null>;
 
 	validateUser: (dto: UserLoginDto) => Promise<boolean>;
+
+	getUserInfo: (email: string) => Promise<UserModal | null>;
 }

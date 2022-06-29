@@ -1,5 +1,5 @@
 import { IUsersService } from './users.service.interface';
-import {ENV_TYPE, TYPES} from '../../types';
+import { ENV_TYPE, TYPES } from '../../types';
 import { IConfigService } from '../../config/config.service.interface';
 import { UserRegisterDto } from '../dto/user-register.dto';
 import { User } from '../entity/user.entity';
@@ -34,5 +34,13 @@ export class UsersService implements IUsersService {
 		}
 		const newUser = new User(existedUser.email, existedUser.name, existedUser.password);
 		return newUser.comparePassword(password);
+	}
+
+	async getUserInfo(email: string): Promise<UserModal | null> {
+		const existedUser = await this.usersRepository.find(email);
+		if (!existedUser) {
+			return null;
+		}
+		return existedUser;
 	}
 }

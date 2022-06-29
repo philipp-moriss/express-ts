@@ -13,6 +13,7 @@ import 'reflect-metadata';
 import { UserModal } from '@prisma/client';
 import { sign } from 'jsonwebtoken';
 import { IConfigService } from '../../config/config.service.interface';
+import { AuthGuard } from '../../common/auth.guard';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
@@ -39,7 +40,7 @@ export class UserController extends BaseController implements IUserController {
 				path: '/info',
 				method: 'get',
 				func: this.info,
-				middlewares: [],
+				middlewares: [new AuthGuard()],
 			},
 		]);
 	}
@@ -79,7 +80,11 @@ export class UserController extends BaseController implements IUserController {
 		res: Response,
 		next: NextFunction,
 	): Promise<void> {
-		this.ok(res, { email: user });
+		const result = await this.userService.getUserInfo(user);
+		if (!result) {
+			return next(new HttpError(422, 'user does not exist', 'UserController-info'));
+		}
+		this.ok(res, { userId: result.id, name: result.name });
 	}
 
 	private signJWT(email: string, secret: string): Promise<string> {
