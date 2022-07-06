@@ -9,6 +9,7 @@
     "build": "tsc",
     "dev": "nodemon",
     "dev:inspect": "nodemon -e ts,json --exec node --inspect=localhost:9229 -r ts-node/register src/main.ts",
+    "test": "jest",
     "lint": "eslint ./src/**",
     "lint:fix": "eslint ./src/** --fix",
     "generate": "npx prisma generate"
