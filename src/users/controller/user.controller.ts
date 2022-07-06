@@ -52,7 +52,7 @@ export class UserController extends BaseController implements IUserController {
 	): Promise<void> {
 		const result = await this.userService.validateUser(body);
 		if (!result) {
-			return next(new HttpError(401, 'no autarization', 'UserController-login'));
+			return next(new HttpError(401, 'no authorization', 'UserController-login'));
 		}
 		const secret = this.configService.get(ENV_TYPE.SECRET_JWT_TOKEN);
 		const jwt = await this.signJWT(body.email, secret);
